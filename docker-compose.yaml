@@ -21,6 +21,8 @@ services:
       - db
     environment:
       - DB_HOST=db
+      - DB_PASSWORD=12345
+      - DB_DATABASE=testemed
     networks:
       - my-networks
 
