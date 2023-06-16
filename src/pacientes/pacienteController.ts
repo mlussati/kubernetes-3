@@ -12,7 +12,7 @@ export const lerPacientes = async (req: Request, res: Response): Promise<void> =
   const allPacientes = await tabelaPaciente.find()
 
   if (allPacientes.length === 0) {
-    res.status(404).json('Não encontramos pacientes!')
+    res.status(200).json([])
   } else {
     res.status(200).json(allPacientes)
   }
