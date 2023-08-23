@@ -15,7 +15,25 @@ spec:
         app: vollmed
     spec:
       containers:
-      - name: vollmedAPI
+      - name: vollmed-api
         image: manilson97/vollmed:1.0
         ports:
         - containerPort: 3000
+        env:
+        # Define the environment variable
+        - name: DB_HOST 
+          valueFrom:
+            configMapKeyRef:
+              name: dados
+              key: DB_HOST
+        - name: DB_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: dados
+              key: DB_DATABASE
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: senhas
+              key: DB_DATABASE
+
