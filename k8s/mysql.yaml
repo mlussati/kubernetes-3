@@ -1,3 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  ports:
+  - port: 3306
+    name: mysql
+  clusterIP: None
+  selector:
+    app: mysql
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -22,25 +36,22 @@ spec:
         - containerPort: 3306
           name: mysql
         env:
-        - name: MYSQL_DATABASE
+        - name: MYSQL_DATABASE # Notice that the case is different here
+                                     # from the key name in the ConfigMap.
           valueFrom:
             configMapKeyRef:
-              name: dados
-              key: DB_DATABASE
-        - name: MYSQL_ROOT_PASSWORD
+              name: dados           # The ConfigMap this value comes from.
+              key: DB_DATABASE # The key to fetch.
+        - name: MYSQL_ROOT_PASSWORD # Notice that the case is different here
+                                     # from the key name in the ConfigMap.
           valueFrom:
             secretKeyRef:
-              name: senhas
-              key: DB_DATABASE
+              name: senhas           # The ConfigMap this value comes from.
+              key: DB_PASSWORD # The key to fetch.
         volumeMounts:
-        - name: www
-          mountPath: /usr/share/nginx/html
-  volumeClaimTemplates:
-  - metadata:
-      name: www
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "my-storage-class"
-      resources:
-        requests:
-          storage: 1Gi
+        - name: mysql-ps
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-ps
+        persistentVolumeClaim:
+          claimName: volume-mysql

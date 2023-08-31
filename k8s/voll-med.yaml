@@ -21,19 +21,27 @@ spec:
         - containerPort: 3000
         env:
         # Define the environment variable
-        - name: DB_HOST 
+        - name: DB_HOST # Notice that the case is different here
+                                     # from the key name in the ConfigMap.
           valueFrom:
             configMapKeyRef:
-              name: dados
-              key: DB_HOST
-        - name: DB_DATABASE
+              name: dados           # The ConfigMap this value comes from.
+              key: DB_HOST # The key to fetch.
+        - name: DB_DATABASE # Notice that the case is different here
+                                     # from the key name in the ConfigMap.
           valueFrom:
             configMapKeyRef:
-              name: dados
-              key: DB_DATABASE
-        - name: DB_PASSWORD
+              name: dados           # The ConfigMap this value comes from.
+              key: DB_DATABASE # The key to fetch.
+        - name: DB_PASSWORD # Notice that the case is different here
+                                     # from the key name in the ConfigMap.
           valueFrom:
             secretKeyRef:
-              name: senhas
-              key: DB_DATABASE
-
+              name: senhas           # The ConfigMap this value comes from.
+              key: DB_PASSWORD # The key to fetch.
+        livenessProbe:
+          httpGet:
+            path: /paciente
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 3
