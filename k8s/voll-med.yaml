@@ -16,7 +16,8 @@ spec:
     spec:
       containers:
       - name: vollmed-api
-        image: manilson97/vollmed:1.0
+        image: leonardosartorello/vollmed:v8
+        # image: manilson97/vollmed:1.0
         ports:
         - containerPort: 3000
         env:
@@ -43,5 +44,5 @@ spec:
           httpGet:
             path: /paciente
             port: 3000
-          initialDelaySeconds: 30
+          initialDelaySeconds: 300
           periodSeconds: 3
