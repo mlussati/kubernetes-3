@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-mysql
+spec:
+  schedule: "0 3 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mysqldump
+            image: manilson97/myqldump:1.1
+            env:
+            # Define the environment variable
+            - name: MYSQL_ENV_DB_HOST # Notice that the case is different here
+                                        # from the key name in the ConfigMap.
+              valueFrom:
+                configMapKeyRef:
+                  name: dados           # The ConfigMap this value comes from.
+                  key: DB_HOST # The key to fetch.
+            - name: MYSQL_ENV_DB_PASS # Notice that the case is different here
+                                        # from the key name in the ConfigMap.
+              valueFrom:
+                secretKeyRef:
+                  name: senhas           # The ConfigMap this value comes from.
+                  key: DB_PASSWORD # The key to fetch.
+            - name: MYSQL_ENV_DB_USER # Notice that the case is different here
+                                        # from the key name in the ConfigMap.
+              valueFrom:
+                secretKeyRef:
+                  name: senhas           # The ConfigMap this value comes from.
+                  key: MYSQL_ENV_DB_USER # The key to fetch.
+          restartPolicy: OnFailure
